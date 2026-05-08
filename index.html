@@ -184,26 +184,22 @@ const NAV_INTERCEPTOR = (baseUrl) => `
   function nav(url) {
     window.parent.postMessage({type:'__inj_nav__', url: url}, '*');
   }
-  // Intercept all clicks — use capture so we get it before the page's own handlers
   document.addEventListener('click', function(e) {
     var el = e.target;
-    // Walk up in case click was on a child of <a>
     while (el && el.tagName !== 'A') el = el.parentElement;
     if (!el || el.tagName !== 'A') return;
     var href = el.getAttribute('href');
     var resolved = abs(href);
     if (!resolved) return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    e.preventDefault(); e.stopImmediatePropagation();
     nav(resolved);
   }, true);
-  // Intercept form submits
+
   document.addEventListener('submit', function(e) {
     var form = e.target;
     var method = (form.getAttribute('method') || 'get').toLowerCase();
     var action = abs(form.getAttribute('action') || BASE) || BASE;
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    e.preventDefault(); e.stopImmediatePropagation();
     if (method === 'get') {
       var params = new URLSearchParams(new FormData(form)).toString();
       nav(action + (params ? (action.includes('?') ? '&' : '?') + params : ''));
@@ -211,27 +207,19 @@ const NAV_INTERCEPTOR = (baseUrl) => `
       nav(action);
     }
   }, true);
-  // Intercept window.location assignments
+
+  // location proxy + console hook (shortened)
   var _href = BASE;
   try {
-    var loc = {
-      get href(){ return _href; },
-      set href(v){ var r=abs(v); if(r){ _href=r; nav(r); } },
-      assign: function(v){ var r=abs(v); if(r) nav(r); },
-      replace: function(v){ var r=abs(v); if(r) nav(r); },
-      toString: function(){ return _href; }
-    };
-    // Some pages read location.host, origin etc — proxy those
-    ['protocol','host','hostname','port','pathname','search','hash','origin']
-      .forEach(function(k){ try{ Object.defineProperty(loc, k, { get: function(){ try{ return new URL(_href)[k]; }catch(e){ return ''; } } }); }catch(e){} });
-    try { Object.defineProperty(window, 'location', { get: function(){ return loc; }, configurable: true }); } catch(e){}
-  } catch(e){}
-  // Let console.log bubble up
+    var loc = { get href(){return _href;}, set href(v){var r=abs(v);if(r){_href=r;nav(r);}}, assign:function(v){var r=abs(v);if(r)nav(r);}, replace:function(v){var r=abs(v);if(r)nav(r);}, toString:function(){return _href;} };
+    ['protocol','host','hostname','port','pathname','search','hash','origin'].forEach(k=>{try{Object.defineProperty(loc,k,{get:function(){try{return new URL(_href)[k];}catch(e){return '';}}});}catch(e){}});
+    Object.defineProperty(window,'location',{get:function(){return loc;},configurable:true});
+  }catch(e){}
   var _log = console.log.bind(console);
-  console.log = function() {
-    var msg = Array.from(arguments).map(function(a){ try{ return typeof a === 'object' ? JSON.stringify(a) : String(a); }catch(e){ return String(a); } }).join(' ');
-    window.parent.postMessage({type:'__inj_log__', msg: msg}, '*');
-    _log.apply(console, arguments);
+  console.log = function(){
+    var msg = Array.from(arguments).map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');
+    window.parent.postMessage({type:'__inj_log__',msg:msg},'*');
+    _log.apply(console,arguments);
   };
 })();
 <\/script>`;
