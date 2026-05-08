@@ -5,107 +5,96 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INJ</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@700;800&display=swap');
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#0a0a0b;--surface:#111113;--surface2:#1a1a1e;--border:#2a2a30;
-    --accent:#00ff88;--accent2:#ff3366;--accent3:#7c6fff;
-    --text:#e8e8f0;--muted:#666680;--bar-h:42px;
-  }
-  html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text)}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;--surface:#111113;--surface2:#1a1a1e;--border:#2a2a30;
+  --accent:#00ff88;--accent2:#ff3366;--accent3:#7c6fff;
+  --text:#e8e8f0;--muted:#666680;--bar-h:42px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text)}
 
-  #bar{
-    position:fixed;top:0;left:0;right:0;height:var(--bar-h);
-    background:var(--surface);border-bottom:1px solid var(--border);
-    display:flex;align-items:center;gap:8px;padding:0 10px;z-index:1000;
-  }
-  #logo{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;user-select:none;flex-shrink:0}
-  #url-wrap{flex:1;display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0 10px;height:28px;gap:6px;transition:border-color .2s}
-  #url-wrap:focus-within{border-color:var(--accent3)}
-  #url-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
-  #url-dot.loading{background:#ffb930;box-shadow:0 0 6px #ffb930;animation:pulse .8s infinite alternate}
-  #url-dot.live{background:var(--accent);box-shadow:0 0 6px var(--accent)}
-  #url-dot.error{background:var(--accent2)}
-  @keyframes pulse{to{opacity:.3}}
-  #url-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11.5px;caret-color:var(--accent)}
-  #url-input::placeholder{color:var(--muted)}
-  #go-btn{background:var(--accent);color:#000;border:none;border-radius:4px;padding:0 10px;height:22px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:opacity .15s,transform .1s;flex-shrink:0}
-  #go-btn:hover{opacity:.85}#go-btn:active{transform:scale(.96)}#go-btn:disabled{opacity:.35;cursor:default}
-  #inject-btn{background:none;border:1px solid var(--border);border-radius:5px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;padding:0 9px;height:28px;display:flex;align-items:center;gap:5px;transition:all .18s;flex-shrink:0;white-space:nowrap}
-  #inject-btn:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.08)}
-  #inject-btn.active{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.12);box-shadow:0 0 0 1px var(--accent3)}
+/* BAR */
+#bar{position:fixed;top:0;left:0;right:0;height:var(--bar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:0 10px;z-index:1000;transition:transform .22s ease}
+#logo{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;user-select:none;flex-shrink:0}
+#url-wrap{flex:1;display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0 10px;height:28px;gap:6px;transition:border-color .2s}
+#url-wrap:focus-within{border-color:var(--accent3)}
+#url-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
+#url-dot.loading{background:#ffb930;box-shadow:0 0 6px #ffb930;animation:blink .7s infinite alternate}
+#url-dot.live{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+#url-dot.error{background:var(--accent2)}
+@keyframes blink{to{opacity:.25}}
+#url-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11.5px;caret-color:var(--accent)}
+#url-input::placeholder{color:var(--muted)}
+#go-btn{background:var(--accent);color:#000;border:none;border-radius:4px;padding:0 10px;height:22px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:opacity .15s,transform .1s;flex-shrink:0}
+#go-btn:hover{opacity:.85}#go-btn:active{transform:scale(.96)}#go-btn:disabled{opacity:.35;cursor:default}
+#inject-btn{background:none;border:1px solid var(--border);border-radius:5px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;padding:0 9px;height:28px;display:flex;align-items:center;gap:5px;transition:all .18s;flex-shrink:0;white-space:nowrap}
+#inject-btn:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.08)}
+#inject-btn.active{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.12);box-shadow:0 0 0 1px var(--accent3)}
 
-  #frame-wrap{position:fixed;top:var(--bar-h);left:0;right:0;bottom:0;transition:bottom .28s cubic-bezier(.22,1,.36,1)}
-  #frame-wrap.panel-open{bottom:300px}
-  #frame{width:100%;height:100%;border:none;background:#fff;display:none}
+/* FRAME AREA */
+#frame-wrap{position:fixed;top:var(--bar-h);left:0;right:0;bottom:0;transition:top .22s ease,bottom .28s cubic-bezier(.22,1,.36,1)}
+#frame-wrap.panel-open{bottom:300px}
+#frame{width:100%;height:100%;border:none;background:#fff;display:none}
 
-  #placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg)}
-  #placeholder.hidden{display:none}
-  .ph-glyph{font-size:40px;opacity:.1}
-  .ph-text{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.85}
-  .ph-text strong{color:var(--accent3)}.ph-text em{color:var(--accent);font-style:normal}
+#placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg)}
+#placeholder.hidden{display:none}
+.ph-glyph{font-size:40px;opacity:.1}
+.ph-text{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.9}
+.ph-text strong{color:var(--accent3)}.ph-text em{color:var(--accent);font-style:normal}
 
-  #loading-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg);flex-direction:column;gap:14px}
-  #loading-overlay.show{display:flex}
-  .spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .load-text{font-size:11px;color:var(--muted)}
+#loading-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg);flex-direction:column;gap:14px}
+#loading-overlay.show{display:flex}
+.spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-text{font-size:11px;color:var(--muted)}
 
-  #error-screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--bg)}
-  #error-screen.show{display:flex}
-  .err-code{font-size:30px;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2)}
-  .err-msg{font-size:11px;color:var(--muted);text-align:center;max-width:400px;line-height:1.75}
+#error-screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--bg)}
+#error-screen.show{display:flex}
+.err-code{font-size:30px;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent2)}
+.err-msg{font-size:11px;color:var(--muted);text-align:center;max-width:400px;line-height:1.75}
 
-  #panel{position:fixed;bottom:0;left:0;right:0;height:300px;background:var(--surface);border-top:1px solid var(--border);z-index:999;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.22,1,.36,1)}
-  #panel.open{transform:translateY(0)}
-  #panel-header{display:flex;align-items:center;padding:0 12px;height:36px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
-  .ptab{font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:4px;cursor:pointer;color:var(--muted);transition:all .15s;border:1px solid transparent}
-  .ptab:hover{color:var(--text)}
-  .ptab.active{color:var(--accent3);border-color:rgba(124,111,255,.3);background:rgba(124,111,255,.1)}
-  .panel-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
-  .action-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;cursor:pointer;transition:all .15s;letter-spacing:.04em}
-  .action-btn:hover{color:var(--text);border-color:var(--muted)}
-  .action-btn.run{border-color:var(--accent);color:var(--accent)}
-  .action-btn.run:hover{background:var(--accent);color:#000}
-  .action-btn.run:active{transform:scale(.96)}
-  #close-panel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:4px;transition:color .15s;display:flex;align-items:center}
-  #close-panel:hover{color:var(--accent2)}
+/* PANEL */
+#panel{position:fixed;bottom:0;left:0;right:0;height:300px;background:var(--surface);border-top:1px solid var(--border);z-index:999;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s cubic-bezier(.22,1,.36,1)}
+#panel.open{transform:translateY(0)}
+#panel-header{display:flex;align-items:center;padding:0 12px;height:36px;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
+.ptab{font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:4px;cursor:pointer;color:var(--muted);transition:all .15s;border:1px solid transparent}
+.ptab:hover{color:var(--text)}
+.ptab.active{color:var(--accent3);border-color:rgba(124,111,255,.3);background:rgba(124,111,255,.1)}
+.panel-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.action-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.action-btn:hover{color:var(--text);border-color:var(--muted)}
+.action-btn.run{border-color:var(--accent);color:var(--accent)}
+.action-btn.run:hover{background:var(--accent);color:#000}
+.action-btn.run:active{transform:scale(.96)}
+#close-panel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:4px;transition:color .15s;display:flex;align-items:center}
+#close-panel:hover{color:var(--accent2)}
+#panel-body{flex:1;overflow:hidden;position:relative}
+.tab-pane{display:none;height:100%;flex-direction:column}
+.tab-pane.active{display:flex}
+textarea.editor{flex:1;background:transparent;border:none;outline:none;resize:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;padding:10px 14px;tab-size:2;caret-color:var(--accent)}
+textarea.editor::placeholder{color:var(--muted);opacity:.4}
+#console-out{background:#070709;border-top:1px solid var(--border);max-height:76px;overflow-y:auto;padding:5px 12px;font-size:10.5px;line-height:1.6;flex-shrink:0}
+.log-line{display:flex;gap:7px}
+.log-icon{flex-shrink:0}
+.log-line.info .log-text{color:var(--text)}
+.log-line.success .log-text{color:var(--accent)}
+.log-line.error .log-text{color:var(--accent2)}
+.log-line.warn .log-text{color:#ffb930}
+#snippets-bar{display:flex;flex-wrap:wrap;gap:4px;padding:6px 12px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.snippet{font-size:9px;padding:2px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.snippet:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.07)}
 
-  #panel-body{flex:1;overflow:hidden;position:relative}
-  .tab-pane{display:none;height:100%;flex-direction:column}
-  .tab-pane.active{display:flex}
-  textarea.editor{flex:1;background:transparent;border:none;outline:none;resize:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;padding:10px 14px;tab-size:2;caret-color:var(--accent)}
-  textarea.editor::placeholder{color:var(--muted);opacity:.4}
+/* TOAST */
+#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:11px;color:var(--text);z-index:2000;transition:transform .22s,opacity .22s;opacity:0;pointer-events:none;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-  #console-out{background:#070709;border-top:1px solid var(--border);max-height:76px;overflow-y:auto;padding:5px 12px;font-size:10.5px;line-height:1.6;flex-shrink:0}
-  .log-line{display:flex;gap:7px}
-  .log-icon{flex-shrink:0}
-  .log-line.info .log-text{color:var(--text)}
-  .log-line.success .log-text{color:var(--accent)}
-  .log-line.error .log-text{color:var(--accent2)}
-  .log-line.warn .log-text{color:#ffb930}
-
-  #snippets-bar{display:flex;flex-wrap:wrap;gap:4px;padding:6px 12px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
-  .snippet{font-size:9px;padding:2px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace}
-  .snippet:hover{border-color:var(--accent3);color:var(--accent3);background:rgba(124,111,255,.07)}
-
-  #toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:11px;color:var(--text);z-index:2000;transition:transform .22s,opacity .22s;opacity:0;pointer-events:none;white-space:nowrap}
-  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
-  /* F9 UI toggle */
-  body.ui-hidden #bar { transform: translateY(-100%); transition: transform .2s ease; }
-  body.ui-hidden #panel { transform: translateY(100%) !important; }
-  body.ui-hidden #frame-wrap { top: 0 !important; bottom: 0 !important; }
-  #bar { transition: transform .2s ease; }
-
-  /* F9 hint */
-  #f9-hint {
-    position: fixed; bottom: 8px; right: 10px;
-    font-size: 9px; color: var(--muted); opacity: .35;
-    z-index: 3000; pointer-events: none; letter-spacing: .06em;
-    transition: opacity .3s;
-  }
-  body.ui-hidden #f9-hint { opacity: 0; }
+/* F9 TOGGLE */
+body.ui-hidden #bar{transform:translateY(calc(-100% - 2px))}
+body.ui-hidden #frame-wrap{top:0}
+body.ui-hidden #panel{transform:translateY(100%) !important}
+#f9-hint{position:fixed;bottom:7px;right:10px;font-size:9px;color:var(--muted);opacity:.3;z-index:3000;pointer-events:none;letter-spacing:.06em;transition:opacity .3s}
+body.ui-hidden #f9-hint{opacity:0}
 </style>
 </head>
 <body>
@@ -130,14 +119,13 @@
     <div class="ph-glyph">⬡</div>
     <div class="ph-text">
       Enter any URL and hit <strong>GO</strong><br>
-      Page loads via proxy — links &amp; forms stay injectable<br>
-      Hit <em>&lt;/&gt;</em> to open the code panel · <em>F9</em> to hide UI<br>
-      <span style="color:var(--accent2);font-size:10px">⚠ Serve via HTTP not file:// for best results</span>
+      Links &amp; forms are intercepted — navigation stays injectable<br>
+      <em>&lt;/&gt;</em> opens the code panel &nbsp;·&nbsp; <em>F9</em> hides the UI
     </div>
   </div>
   <div id="loading-overlay">
     <div class="spinner"></div>
-    <div class="load-text" id="load-text">Fetching page…</div>
+    <div class="load-text" id="load-text">Fetching…</div>
   </div>
   <div id="error-screen">
     <div class="err-code">FAILED</div>
@@ -159,7 +147,7 @@
   </div>
   <div id="panel-body">
     <div class="tab-pane active" id="pane-js">
-      <textarea class="editor" id="js-editor" placeholder="// JavaScript — Ctrl+Enter to run&#10;document.body.style.background = '#ff3366'"></textarea>
+      <textarea class="editor" id="js-editor" placeholder="// JavaScript  —  Ctrl+Enter to run&#10;document.body.style.background = '#ff3366'"></textarea>
       <div id="console-out"></div>
     </div>
     <div class="tab-pane" id="pane-css">
@@ -176,6 +164,81 @@
 <div id="f9-hint">F9 — toggle UI</div>
 
 <script>
+// ─────────────────────────────────────────────
+//  The nav-interceptor script we INJECT into
+//  every fetched page's HTML before srcdoc.
+//  It runs INSIDE the iframe, catches all clicks
+//  and form submits, and postMessages the parent.
+// ─────────────────────────────────────────────
+const NAV_INTERCEPTOR = (baseUrl) => `
+<script id="__inj_nav__">
+(function(){
+  var BASE = ${JSON.stringify(baseUrl)};
+  function abs(href) {
+    if (!href) return null;
+    href = href.trim();
+    if (!href || href.startsWith('javascript') || href.startsWith('mailto') || href.startsWith('tel')) return null;
+    if (href.startsWith('#')) return null;
+    try { return new URL(href, BASE).href; } catch(e){ return null; }
+  }
+  function nav(url) {
+    window.parent.postMessage({type:'__inj_nav__', url: url}, '*');
+  }
+  // Intercept all clicks — use capture so we get it before the page's own handlers
+  document.addEventListener('click', function(e) {
+    var el = e.target;
+    // Walk up in case click was on a child of <a>
+    while (el && el.tagName !== 'A') el = el.parentElement;
+    if (!el || el.tagName !== 'A') return;
+    var href = el.getAttribute('href');
+    var resolved = abs(href);
+    if (!resolved) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    nav(resolved);
+  }, true);
+  // Intercept form submits
+  document.addEventListener('submit', function(e) {
+    var form = e.target;
+    var method = (form.getAttribute('method') || 'get').toLowerCase();
+    var action = abs(form.getAttribute('action') || BASE) || BASE;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (method === 'get') {
+      var params = new URLSearchParams(new FormData(form)).toString();
+      nav(action + (params ? (action.includes('?') ? '&' : '?') + params : ''));
+    } else {
+      nav(action);
+    }
+  }, true);
+  // Intercept window.location assignments
+  var _href = BASE;
+  try {
+    var loc = {
+      get href(){ return _href; },
+      set href(v){ var r=abs(v); if(r){ _href=r; nav(r); } },
+      assign: function(v){ var r=abs(v); if(r) nav(r); },
+      replace: function(v){ var r=abs(v); if(r) nav(r); },
+      toString: function(){ return _href; }
+    };
+    // Some pages read location.host, origin etc — proxy those
+    ['protocol','host','hostname','port','pathname','search','hash','origin']
+      .forEach(function(k){ try{ Object.defineProperty(loc, k, { get: function(){ try{ return new URL(_href)[k]; }catch(e){ return ''; } } }); }catch(e){} });
+    try { Object.defineProperty(window, 'location', { get: function(){ return loc; }, configurable: true }); } catch(e){}
+  } catch(e){}
+  // Let console.log bubble up
+  var _log = console.log.bind(console);
+  console.log = function() {
+    var msg = Array.from(arguments).map(function(a){ try{ return typeof a === 'object' ? JSON.stringify(a) : String(a); }catch(e){ return String(a); } }).join(' ');
+    window.parent.postMessage({type:'__inj_log__', msg: msg}, '*');
+    _log.apply(console, arguments);
+  };
+})();
+<\/script>`;
+
+// ─────────────────────────────────────────────
+//  Main app
+// ─────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 const urlInput    = $('url-input');
 const goBtn       = $('go-btn');
@@ -204,7 +267,7 @@ let panelOpen  = false;
 let pageLoaded = false;
 let uiHidden   = false;
 
-// ── F9 UI TOGGLE ──
+// ── F9 TOGGLE ──
 document.addEventListener('keydown', e => {
   if (e.key === 'F9') {
     e.preventDefault();
@@ -214,7 +277,19 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// CORS proxies tried in order
+// ── LISTEN for postMessages from iframe ──
+window.addEventListener('message', e => {
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === '__inj_nav__') {
+    const url = e.data.url;
+    if (url) { urlInput.value = url; navigate(url); }
+  }
+  if (e.data.type === '__inj_log__') {
+    log('⌨ ' + e.data.msg, 'info');
+  }
+});
+
+// ── PROXIES ──
 const PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -225,27 +300,31 @@ const SNIPPETS = {
   js:[
     {label:'Dark mode',   code:`document.body.style.filter='invert(1) hue-rotate(180deg)';document.querySelectorAll('img,video').forEach(e=>e.style.filter='invert(1) hue-rotate(180deg)');`},
     {label:'Outline all', code:`document.querySelectorAll('*').forEach(e=>e.style.outline='1px solid rgba(255,51,102,0.5)')`},
-    {label:'Confetti',    code:`(function(){let s=document.createElement('style');s.textContent='@keyframes _f{to{top:110vh}}';document.head.appendChild(s);for(let i=0;i<80;i++){let d=document.createElement('div');Object.assign(d.style,{position:'fixed',top:'-10px',left:Math.random()*100+'vw',width:'8px',height:'8px',borderRadius:'2px',background:\`hsl(\${Math.random()*360},90%,60%)\`,zIndex:99999,animation:'_f 2s linear forwards',transform:\`rotate(\${Math.random()*360}deg)\`});document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}})()`},
+    {label:'Confetti',    code:`(function(){var s=document.createElement('style');s.textContent='@keyframes _f{to{top:110vh;opacity:0}}';document.head.appendChild(s);for(var i=0;i<90;i++){var d=document.createElement('div');d.style.cssText='position:fixed;top:-10px;left:'+Math.random()*100+'vw;width:8px;height:8px;border-radius:2px;background:hsl('+Math.random()*360+',90%,60%);z-index:99999;animation:_f 2s linear forwards;transform:rotate('+Math.random()*360+'deg)';document.body.appendChild(d);setTimeout(function(el){el.remove()},2600,d)}})();`},
     {label:'Font→mono',   code:`document.querySelectorAll('*').forEach(e=>e.style.fontFamily='monospace')`},
     {label:'Grayscale',   code:`document.documentElement.style.filter='grayscale(1)'`},
     {label:'Hide images', code:`document.querySelectorAll('img').forEach(e=>e.style.display='none')`},
-    {label:'Count links', code:`alert('Links: '+document.querySelectorAll('a').length)`},
-    {label:'Log title',   code:`console.log('Title:', document.title)`},
+    {label:'Log title',   code:`console.log(document.title)`},
+    {label:'Count links', code:`alert(document.querySelectorAll('a').length+' links')`},
+    {label:'Nuke styles', code:`document.querySelectorAll('style,link[rel=stylesheet]').forEach(e=>e.remove())`},
   ],
   css:[
-    {label:'Red outlines',code:`* { outline: 1px solid red !important; }`},
-    {label:'Dark bg',     code:`html,body { background: #0a0a0b !important; color: #e8e8f0 !important; }`},
-    {label:'Blur',        code:`body { filter: blur(4px); }`},
-    {label:'Neon glow',   code:`* { text-shadow: 0 0 8px currentColor; }`},
-    {label:'No images',   code:`img { display: none !important; }`},
-    {label:'Comic Sans',  code:`* { font-family: "Comic Sans MS", cursive !important; }`},
+    {label:'Red outlines',code:`*{outline:1px solid red!important}`},
+    {label:'Dark bg',     code:`html,body{background:#0a0a0b!important;color:#e8e8f0!important}`},
+    {label:'Blur',        code:`body{filter:blur(4px)}`},
+    {label:'Neon glow',   code:`*{text-shadow:0 0 8px currentColor}`},
+    {label:'No images',   code:`img{display:none!important}`},
+    {label:'Comic Sans',  code:`*{font-family:"Comic Sans MS",cursive!important}`},
+    {label:'Sepia',       code:`html{filter:sepia(1)}`},
   ],
   html:[
-    {label:'Banner',      code:`<div style="position:fixed;top:0;left:0;right:0;background:#ff3366;color:#fff;text-align:center;font-family:monospace;font-weight:700;padding:8px;z-index:99999;font-size:13px">⬡ INJECTED BY INJ</div>`},
+    {label:'Banner',      code:`<div style="position:fixed;top:0;left:0;right:0;background:#ff3366;color:#fff;text-align:center;font-family:monospace;font-weight:700;padding:8px;z-index:99999;font-size:13px">⬡ INJECTED</div>`},
     {label:'Clock',       code:`<div id="_c" style="position:fixed;bottom:12px;right:12px;background:#000;color:#00ff88;font-family:monospace;font-size:13px;padding:6px 12px;border-radius:6px;z-index:99999;border:1px solid #333"></div><script>setInterval(()=>document.getElementById('_c').textContent=new Date().toLocaleTimeString(),500)<\/script>`},
-    {label:'Watermark',   code:`<div style="position:fixed;bottom:20px;left:20px;color:rgba(0,0,0,.08);font-size:60px;font-weight:900;font-family:sans-serif;z-index:99999;pointer-events:none;user-select:none">INJ</div>`},
+    {label:'Watermark',   code:`<div style="position:fixed;bottom:20px;left:20px;color:rgba(0,0,0,.07);font-size:72px;font-weight:900;font-family:sans-serif;z-index:99999;pointer-events:none;user-select:none">INJ</div>`},
   ],
 };
+
+const getEd = () => activeTab==='js' ? jsEditor : activeTab==='css' ? cssEditor : htmlEditor;
 
 function renderSnippets() {
   snippetsBar.innerHTML = '';
@@ -256,13 +335,12 @@ function renderSnippets() {
     snippetsBar.appendChild(b);
   });
 }
-const getEd = () => activeTab==='js' ? jsEditor : activeTab==='css' ? cssEditor : htmlEditor;
 
 // ── TABS ──
 document.querySelectorAll('.ptab').forEach(t => t.addEventListener('click', () => {
   document.querySelectorAll('.ptab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active'); activeTab=t.dataset.tab;
+  t.classList.add('active'); activeTab = t.dataset.tab;
   $('pane-'+activeTab).classList.add('active'); renderSnippets();
 }));
 
@@ -272,7 +350,7 @@ const closeP    = () => { panel.classList.remove('open'); frameWrap.classList.re
 injectBtn.addEventListener('click', () => panelOpen ? closeP() : openPanel());
 closePanel.addEventListener('click', closeP);
 
-// ── LOAD ──
+// ── STATE ──
 function showState(s) {
   placeholder.classList.add('hidden');
   loadingOvl.classList.remove('show');
@@ -280,85 +358,38 @@ function showState(s) {
   frame.style.display = 'none';
   if (s==='loading') loadingOvl.classList.add('show');
   else if (s==='error') errorScreen.classList.add('show');
-  else if (s==='frame') frame.style.display='block';
-  else placeholder.classList.remove('hidden');
+  else if (s==='frame') frame.style.display = 'block';
+  else { placeholder.classList.remove('hidden'); }
 }
 
-// Resolve a potentially-relative URL against a base
-function resolveUrl(href, base) {
-  try { return new URL(href, base).href; } catch(e) { return null; }
+// ── NAVIGATE ──
+// Injects the nav interceptor script into the fetched HTML string
+function injectInterceptor(html, url) {
+  const script = NAV_INTERCEPTOR(url);
+  // Place right after <head> open, or before everything if no head
+  if (/<head[\s>]/i.test(html)) {
+    return html.replace(/(<head[^>]*>)/i, '$1' + script);
+  }
+  return script + html;
 }
 
-// Intercept all clicks and form submits inside the iframe so navigation
-// goes through our proxy fetch instead of the browser navigating away.
-function hookIframeNav(baseUrl) {
-  try {
-    const win = frame.contentWindow;
-    const doc = frame.contentDocument;
-
-    // Click handler — catches <a> clicks
-    doc.addEventListener('click', e => {
-      const a = e.target.closest('a');
-      if (!a) return;
-      const href = a.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('javascript')) return;
-      const resolved = resolveUrl(href, baseUrl);
-      if (!resolved) return;
-      e.preventDefault();
-      e.stopPropagation();
-      urlInput.value = resolved;
-      navigate(resolved);
-    }, true);
-
-    // Form submit handler
-    doc.addEventListener('submit', e => {
-      const form = e.target;
-      const method = (form.method || 'get').toLowerCase();
-      let action = resolveUrl(form.action || baseUrl, baseUrl);
-      if (!action) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (method === 'get') {
-        const params = new URLSearchParams(new FormData(form)).toString();
-        const sep = action.includes('?') ? '&' : '?';
-        action = params ? action + sep + params : action;
-        urlInput.value = action;
-        navigate(action);
-      } else {
-        // POST — just navigate to the action URL (can't replay POST through proxy easily)
-        urlInput.value = action;
-        navigate(action);
-      }
-    }, true);
-
-    // Also patch window.location assignments inside the frame
-    try {
-      Object.defineProperty(win, 'location', {
-        get() { return win._fakeLocation || { href: baseUrl }; },
-        set(v) { const r = resolveUrl(String(v), baseUrl); if (r) { urlInput.value = r; navigate(r); } }
-      });
-    } catch(e) { /* may be read-only in some browsers, ignore */ }
-
-  } catch(e) { /* cross-origin safety, shouldn't happen since we srcdoc */ }
-}
-
-// Rewrite href/action/src attrs to absolute — but only outside of <script> blocks
-function rewriteAttrs(html, base) {
-  // Split on <script...>...</script> blocks to avoid touching JS strings
-  const parts = html.split(/(<script[\s\S]*?<\/script>)/gi);
-  return parts.map((part, i) => {
-    if (i % 2 === 1) return part; // inside a <script> block, leave alone
-    return part.replace(
-      /(<(?:a|form|link|area)[^>]*?\s(?:href|action|src)\s*=\s*)(['"])((?!https?:|\/\/|#|javascript:|data:|mailto:)[^'"]+)\2/gi,
-      (m, pre, q, path) => {
-        try { return `${pre}${q}${new URL(path, base).href}${q}`; } catch(e) { return m; }
+// Rewrite <a href> and <form action> to absolute so links work even if JS is blocked
+function rewriteLinks(html, base) {
+  // Only touch HTML outside <script> blocks
+  const chunks = html.split(/(<script[\s\S]*?<\/script>)/gi);
+  return chunks.map((chunk, i) => {
+    if (i % 2 === 1) return chunk; // skip script blocks
+    return chunk.replace(
+      /((?:href|action|src)\s*=\s*)(['"])((?!https?:|\/\/|#|javascript:|data:|mailto:|tel:)[^'"]{1,500})\2/gi,
+      (m, attr, q, path) => {
+        try { return attr + q + new URL(path, base).href + q; } catch(e) { return m; }
       }
     );
   }).join('');
 }
 
 async function navigate(targetUrl) {
-  let url = targetUrl || urlInput.value.trim();
+  let url = (targetUrl || urlInput.value).trim();
   if (!url) return;
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
   urlInput.value = url;
@@ -369,64 +400,31 @@ async function navigate(targetUrl) {
 
   let lastErr = '';
   for (let i = 0; i < PROXIES.length; i++) {
-    loadText.textContent = i === 0 ? 'Fetching page…' : `Retrying with proxy ${i+1}…`;
+    loadText.textContent = i === 0 ? 'Fetching…' : `Trying backup proxy…`;
     try {
-      const res = await fetch(PROXIES[i](url), { signal: AbortSignal.timeout(12000) });
+      const res = await fetch(PROXIES[i](url), { signal: AbortSignal.timeout(14000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       let html = await res.text();
 
-      // Parse the origin so assets load. We use a <script> to set document.baseURI
-      // rather than a <base> tag — <base> breaks React and other frameworks that
-      // call new URL(path, document.baseURI) before the DOM is ready.
-      const origin = new URL(url).origin;
-      const baseScript = `<script>
-(function(){
-  // Polyfill: make relative fetch/XHR go to origin
-  var _base = "${url.replace(/"/g,'\\"')}";
-  var _origin = "${origin.replace(/"/g,'\\"')}";
-  // Patch fetch to resolve relative URLs
-  var _fetch = window.fetch;
-  window.fetch = function(input, init) {
-    if (typeof input === 'string' && !/^https?:\\/\\//.test(input)) {
-      try { input = new URL(input, _base).href; } catch(e){}
-    }
-    return _fetch.call(this, input, init);
-  };
-})();
-<\/script>`;
-
-      // Inject a <base> ONLY for HTML resources (stylesheets, images), but place
-      // it after any <meta charset> so it doesn't shift character decoding.
-      // We wrap it so React's URL constructor still gets a valid base.
-      const safeBase = `<base href="${url.replace(/"/g,'&quot;')}">`;
-
-      if (/<head[\s>]/i.test(html)) {
-        // Insert after <meta charset> if present, otherwise right after <head>
-        if (/<meta[^>]+charset/i.test(html)) {
-          html = html.replace(/(<meta[^>]+charset[^>]*>)/i, `$1${safeBase}${baseScript}`);
-        } else {
-          html = html.replace(/(<head[^>]*>)/i, `$1${safeBase}${baseScript}`);
-        }
-      } else {
-        html = safeBase + baseScript + html;
-      }
-
-      // Rewrite ONLY <a href> and <form action> in HTML tags (not inside JS strings)
-      // to absolute URLs so our click interceptor always sees full URLs.
-      // We do this carefully to avoid touching script content.
-      html = rewriteAttrs(html, url);
+      // Rewrite links to absolute first
+      html = rewriteLinks(html, url);
+      // Then inject our nav interceptor (uses postMessage — no cross-origin issues)
+      html = injectInterceptor(html, url);
 
       const capturedUrl = url;
       frame.removeAttribute('src');
-      frame.srcdoc = html;
-      frame.onload = () => {
-        showState('frame');
-        urlDot.className = 'live';
-        goBtn.disabled = false;
-        pageLoaded = true;
-        log(`Loaded: ${capturedUrl}`, 'success');
-        hookIframeNav(capturedUrl);
-      };
+      // Use a fresh frame each time to avoid stale srcdoc issues
+      frame.srcdoc = '';
+      requestAnimationFrame(() => {
+        frame.srcdoc = html;
+        frame.onload = () => {
+          showState('frame');
+          urlDot.className = 'live';
+          goBtn.disabled = false;
+          pageLoaded = true;
+          log(`✓ ${capturedUrl}`, 'success');
+        };
+      });
       return;
     } catch(e) { lastErr = e.message; }
   }
@@ -434,71 +432,79 @@ async function navigate(targetUrl) {
   showState('error');
   urlDot.className = 'error';
   goBtn.disabled = false;
-  errMsg.textContent = `All proxies failed for "${url}". The site may block external requests. Try another URL.`;
+  errMsg.textContent = `Proxies couldn't load "${url}". The site may block external fetches.`;
   log('Load failed: ' + lastErr, 'error');
 }
 
 goBtn.addEventListener('click', () => navigate());
-urlInput.addEventListener('keydown', e => { if(e.key==='Enter') navigate(); });
+urlInput.addEventListener('keydown', e => { if (e.key === 'Enter') navigate(); });
 
-// ── INJECT ──
+// ── LOG ──
 function log(text, type='info') {
-  const icons={info:'›',success:'✓',error:'✗',warn:'⚠'};
-  const el=document.createElement('div');
-  el.className='log-line '+type;
-  el.innerHTML=`<span class="log-icon">${icons[type]}</span><span class="log-text">${esc(String(text))}</span>`;
+  const icons = {info:'›', success:'✓', error:'✗', warn:'⚠'};
+  const el = document.createElement('div');
+  el.className = 'log-line ' + type;
+  el.innerHTML = `<span class="log-icon">${icons[type]}</span><span class="log-text">${escHtml(String(text))}</span>`;
   consoleOut.appendChild(el);
-  consoleOut.scrollTop=consoleOut.scrollHeight;
+  consoleOut.scrollTop = consoleOut.scrollHeight;
 }
-const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const escHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 function showToast(msg, dur=1800) {
-  toastEl.textContent=msg; toastEl.classList.add('show');
-  setTimeout(()=>toastEl.classList.remove('show'), dur);
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  setTimeout(() => toastEl.classList.remove('show'), dur);
 }
 
+// ── INJECT ──
 runBtn.addEventListener('click', () => {
   if (!pageLoaded) { showToast('⚠ Load a page first'); return; }
   try {
     const doc = frame.contentDocument || frame.contentWindow.document;
-    if (activeTab==='js') {
-      const code = jsEditor.value.trim(); if(!code) return;
-      // Intercept console.log
-      try {
-        const win = frame.contentWindow;
-        const orig = win.console.log;
-        win.console.log = (...a) => { log(a.join(' '),'info'); try{orig.apply(win.console,a)}catch(e){} };
-      } catch(e){}
-      const s=doc.createElement('script'); s.textContent=code; doc.head.appendChild(s);
-      log('JS executed','success');
-    } else if (activeTab==='css') {
-      const code=cssEditor.value.trim(); if(!code) return;
-      const s=doc.createElement('style'); s.textContent=code; doc.head.appendChild(s);
-      log('CSS injected','success');
+    if (activeTab === 'js') {
+      const code = jsEditor.value.trim(); if (!code) return;
+      const s = doc.createElement('script');
+      s.textContent = code;
+      doc.head.appendChild(s);
+      log('JS executed', 'success');
+    } else if (activeTab === 'css') {
+      const code = cssEditor.value.trim(); if (!code) return;
+      const s = doc.createElement('style');
+      s.textContent = code;
+      doc.head.appendChild(s);
+      log('CSS injected', 'success');
     } else {
-      const code=htmlEditor.value.trim(); if(!code) return;
-      const wrap=doc.createElement('div'); wrap.innerHTML=code; doc.body.appendChild(wrap);
-      wrap.querySelectorAll('script').forEach(old=>{
-        const s=doc.createElement('script'); s.textContent=old.textContent;
-        doc.body.appendChild(s); old.remove();
+      const code = htmlEditor.value.trim(); if (!code) return;
+      const wrap = doc.createElement('div');
+      wrap.innerHTML = code;
+      doc.body.appendChild(wrap);
+      wrap.querySelectorAll('script').forEach(old => {
+        const s = doc.createElement('script');
+        s.textContent = old.textContent;
+        doc.body.appendChild(s);
+        old.remove();
       });
-      log('HTML injected','success');
+      log('HTML injected', 'success');
     }
     showToast('✓ Injected!');
-  } catch(e) { log('Error: '+e.message,'error'); showToast('✗ Error'); }
+  } catch(e) { log('Error: ' + e.message, 'error'); showToast('✗ Error'); }
 });
 
 clearBtn.addEventListener('click', () => { getEd().value=''; consoleOut.innerHTML=''; getEd().focus(); });
 
-[jsEditor,cssEditor,htmlEditor].forEach(ed => {
+[jsEditor, cssEditor, htmlEditor].forEach(ed => {
   ed.addEventListener('keydown', e => {
-    if (e.key==='Tab') { e.preventDefault(); const s=ed.selectionStart; ed.value=ed.value.slice(0,s)+'  '+ed.value.slice(ed.selectionEnd); ed.selectionStart=ed.selectionEnd=s+2; }
-    if ((e.ctrlKey||e.metaKey)&&e.key==='Enter') runBtn.click();
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const s = ed.selectionStart;
+      ed.value = ed.value.slice(0,s) + '  ' + ed.value.slice(ed.selectionEnd);
+      ed.selectionStart = ed.selectionEnd = s + 2;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runBtn.click();
   });
 });
 
 renderSnippets();
-log('Ready — enter a URL and hit GO','info');
+log('Ready — enter a URL and hit GO', 'info');
 </script>
 </body>
 </html>
