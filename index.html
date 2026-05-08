@@ -173,73 +173,67 @@ body.ui-hidden #f9-hint{opacity:0}
 const NAV_INTERCEPTOR = (baseUrl) => `
 <script id="__inj_nav__">
 (function(){
-  var BASE = ${JSON.stringify(baseUrl || 'about:blank')};
-  function isValidBase(b) {
-    try { new URL('/', b); return true; } catch(e){ return false; }
-  }
-  if (!isValidBase(BASE)) BASE = window.location.href || 'about:blank';
-
+  var BASE = ${JSON.stringify(baseUrl || 'https://play.blooket.com')};
   function abs(href) {
     if (!href) return null;
     href = href.trim();
-    if (!href || href.startsWith('javascript') || href.startsWith('mailto') || href.startsWith('tel')) return null;
-    if (href.startsWith('#')) return null;
+    if (!href || /^javascript|^mailto|^tel|^#/.test(href)) return null;
     try { 
       return new URL(href, BASE).href; 
     } catch(e){ 
-      try { return new URL(href, window.location.href).href; } catch(e2){ return null; }
+      try { return new URL(href, location.href).href; } catch(){ return null; }
     }
   }
-  function nav(url) {
-    if(url) window.parent.postMessage({type:'__inj_nav__', url: url}, '*');
-  }
+  function nav(url){ if(url) window.parent.postMessage({type:'__inj_nav__',url:url},'*'); }
 
-  document.addEventListener('click', function(e) {
-    var el = e.target;
-    while (el && el.tagName !== 'A') el = el.parentElement;
-    if (!el || el.tagName !== 'A') return;
-    var resolved = abs(el.getAttribute('href'));
-    if (!resolved) return;
-    e.preventDefault(); e.stopImmediatePropagation();
-    nav(resolved);
+  document.addEventListener('click', function(e){
+    let el = e.target;
+    while(el && el.tagName !== 'A') el = el.parentElement;
+    if(!el || el.tagName !== 'A') return;
+    let resolved = abs(el.getAttribute('href'));
+    if(resolved){ 
+      e.preventDefault(); 
+      e.stopImmediatePropagation(); 
+      nav(resolved); 
+    }
   }, true);
 
-  document.addEventListener('submit', function(e) {
-    var form = e.target;
-    var method = (form.getAttribute('method') || 'get').toLowerCase();
-    var action = abs(form.getAttribute('action')) || BASE;
+  document.addEventListener('submit', function(e){
+    let form = e.target;
+    let method = (form.getAttribute('method') || 'get').toLowerCase();
+    let action = abs(form.getAttribute('action')) || BASE;
     e.preventDefault(); e.stopImmediatePropagation();
-    if (method === 'get') {
-      var params = new URLSearchParams(new FormData(form)).toString();
-      nav(action + (params ? (action.includes('?')?'&':'?') + params : ''));
-    } else nav(action);
+    if(method === 'get'){
+      let params = new URLSearchParams(new FormData(form)).toString();
+      nav(action + (params ? (action.includes('?') ? '&' : '?') + params : ''));
+    } else {
+      nav(action);
+    }
   }, true);
 
-  // location + console
   var _href = BASE;
   try {
     var loc = {
       get href(){return _href;},
-      set href(v){var r=abs(v); if(r){_href=r; nav(r);}},
-      assign:function(v){var r=abs(v);if(r)nav(r);},
-      replace:function(v){var r=abs(v);if(r)nav(r);},
-      toString:function(){return _href;}
+      set href(v){var r=abs(v);if(r){_href=r;nav(r);}},
+      assign(v){var r=abs(v);if(r)nav(r);},
+      replace(v){var r=abs(v);if(r)nav(r);},
+      toString(){return _href;}
     };
     ['protocol','host','hostname','port','pathname','search','hash','origin'].forEach(k=>{
-      try{Object.defineProperty(loc,k,{get:function(){try{return new URL(_href)[k];}catch(e){return '';}}});}catch(e){}
+      try{Object.defineProperty(loc,k,{get:()=> {try{return new URL(_href)[k];}catch(){return '';}}});}catch(e){}
     });
-    Object.defineProperty(window,'location',{get:function(){return loc;},configurable:true});
+    Object.defineProperty(window,'location',{get:()=>loc,configurable:true});
   }catch(e){}
 
   var _log = console.log.bind(console);
   console.log = function(){
-    var msg = Array.from(arguments).map(a=>typeof a==='object'&&a!==null?JSON.stringify(a):String(a)).join(' ');
+    var msg = Array.from(arguments).map(a => typeof a === 'object' && a !== null ? JSON.stringify(a) : String(a)).join(' ');
     window.parent.postMessage({type:'__inj_log__',msg:msg},'*');
     _log.apply(console,arguments);
   };
 })();
 <\/script>`;
-
 // ─────────────────────────────────────────────
 //  Main app
 // ─────────────────────────────────────────────
@@ -293,10 +287,10 @@ window.addEventListener('message', e => {
   }
 });
 
-// ── PROXIES ──
 const PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://proxy.cors.sh/${url}`,  // add this
 ];
 
 // ── SNIPPETS ──
